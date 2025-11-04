@@ -1,0 +1,45 @@
+Project Name: LockIn List
+1. Project Objective
+To create a simple, single-page web application that helps users with executive functioning challenges translate long, unstructured text (like a teacher's email) into a clear, scannable, and actionable to-do list.
+The app's primary goal is to answer the question: "What am I supposed to do next?" It should reduce overwhelm and provide a clear first step, but it must not do the user's work for them.
+2. Target Audience & Tone
+ * User: 15-year-old male (high school sophomore).
+ * Problem: Feels overwhelmed by dense blocks of text and isn't sure what the required tasks, deadlines, or time commitments are.
+ * Tone: Casual, direct, supportive, and non-clinical. It should feel like a helpful "cheat code" for organizing, not a medical tool or a productivity app for a CEO.
+3. Core User Story
+ * User receives a confusing, multi-paragraph email from a teacher.
+ * User copies the entire email text.
+ * User opens the "LockIn List" web app.
+ * User pastes the text into a simple text area.
+ * User clicks a single button (e.g., "Lock In" or "Get the List").
+ * App sends the text to the Gemini AI for processing.
+ * App displays a clean, simple, and prioritized list of tasks, deadlines, time estimates, and a "First Step" suggestion.
+ * User now feels "locked in" and knows exactly what to do and how long it should take.
+4. Key Features (MVP)
+ * UI - Input: A large, simple, and obvious text area (e.g., "Paste your email here...").
+ * UI - Action: A single, prominent button to submit the text.
+ * UI - Output: A clean, uncluttered display area for the resulting list. This should use clear headings (e.g., "YOUR LIST," "DUE," "FIRST STEP").
+ * UI - Time Estimates: Display an AI-generated time estimate next to each task (e.g., "Write 300-word analysis: ~45 mins").
+ * UI - Clear Button: A button to clear the input and output to start over.
+ * Loading State: A simple loading indicator (e.g., "Thinking...") while the AI is processing.
+5. AI & Technical Requirements
+ * Framework: Single-file HTML, CSS (with Tailwind), and JavaScript.
+ * AI Model: Use gemini-2.5-flash-preview-09-2025 via the generateContent API call.
+ * Core Logic (AI System Prompt): The most important part. The JavaScript fetch call to the Gemini API must include a strong system instruction.
+Recommended System Instruction (for the AI call):
+> "You are 'LockIn List,' an AI that helps students who feel overwhelmed. Your job is to read a block of text (like a teacher's email) and turn it into a simple, clear, actionable to-do list. The user is a 15-year-old high school sophomore.
+> CRITICAL RULES:
+>  * DO NOT do the homework, write any part of the assignment, or answer questions.
+>  * ONLY extract tasks, deadlines, and materials.
+>  * ALWAYS identify the very first, smallest step the user should take (e.g., "Open the PDF," "Create a new doc," "Read the two poems").
+>  * ADD TIME ESTIMATES: For each task, provide a reasonable time estimate in minutes or hours (e.g., "~30 mins," "~1 hour"). Base this on a typical 15-year-old high school sophomore's workload.
+>  * FORMAT your response clearly. Use simple bullet points.
+> Example Output Structure:
+> TASKS:
+>  * Write a 300-word analysis. (~45 mins)
+>  * Upload it to the 'Poetry' portal. (~5 mins)
+> DUE:
+>  * This Friday (before class).
+> FIRST STEP:
+>  * Open the "guiding questions" PDF. (~10 mins)"
+> 
