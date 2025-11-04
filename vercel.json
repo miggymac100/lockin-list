@@ -23,6 +23,6 @@
       "src": "/(.*)",
       "dest": "/lockin-list.html"
     }
-  ],
+  ]
 
 }
