@@ -126,7 +126,7 @@
 
     <script>
         // No API key needed on frontend - using secure backend proxy
-        
+
         // DOM elements
         const inputText = document.getElementById('inputText');
         const lockInBtn = document.getElementById('lockInBtn');
@@ -137,7 +137,10 @@
         const errorState = document.getElementById('errorState');
         const errorMessage = document.getElementById('errorMessage');
 
-
+        // Rate limiting
+        let isProcessing = false;
+        let lastRequestTime = 0;
+        const MIN_REQUEST_INTERVAL = 3000; // 3 seconds between requests
 
         // Event listeners
         lockInBtn.addEventListener('click', processText);
@@ -180,12 +183,33 @@
 
         async function processText() {
             const text = inputText.value.trim();
-            
+
             if (!text) {
                 alert('Please paste some text first! 📝');
                 inputText.focus();
                 return;
             }
+
+            // Rate limiting check
+            const now = Date.now();
+            const timeSinceLastRequest = now - lastRequestTime;
+
+            if (isProcessing) {
+                alert('⏳ Hold on! Still processing your previous request...');
+                return;
+            }
+
+            if (timeSinceLastRequest < MIN_REQUEST_INTERVAL) {
+                const waitTime = Math.ceil((MIN_REQUEST_INTERVAL - timeSinceLastRequest) / 1000);
+                alert(`⏱️ Whoa there! Please wait ${waitTime} more second${waitTime > 1 ? 's' : ''} before trying again.`);
+                return;
+            }
+
+            // Set processing state
+            isProcessing = true;
+            lastRequestTime = now;
+            lockInBtn.disabled = true;
+            lockInBtn.classList.add('opacity-50', 'cursor-not-allowed');
 
             showLoading();
 
@@ -205,13 +229,20 @@
                 }
 
                 const data = await response.json();
-                
+
                 displayResult(data.result);
                 showOutput();
 
             } catch (error) {
                 console.error('Error:', error);
                 showError(error.message || 'Something went wrong. Please try again!');
+            } finally {
+                // Re-enable button after a short delay
+                setTimeout(() => {
+                    isProcessing = false;
+                    lockInBtn.disabled = false;
+                    lockInBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                }, 1000);
             }
         }
 
